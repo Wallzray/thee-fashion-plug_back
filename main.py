@@ -68,7 +68,7 @@ app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # CORS - include common dev origins; tighten for production
 origins = [
-    "https://thee-fashion-plug-front.vercel.app/",
+    "https://thee-fashion-plug-front.vercel.app",
     "http://localhost:19006",  # Expo web default
     "http://localhost:8081",
     "http://192.168.0.1:19006"   # alternate dev port

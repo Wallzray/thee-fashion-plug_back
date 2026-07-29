@@ -1,8 +1,6 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime,Text
 from sqlalchemy.orm import relationship
 from database import Base 
-from datetime import datetime
-
 
 
 
@@ -18,7 +16,6 @@ class Product(Base):
     order_items = relationship("OrderItem", back_populates="product")
     def __str__(self):
         return self.name
-
 
 
 class Cart(Base):
@@ -40,17 +37,18 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True)
-
+    session_id = Column(String, index=True)
     full_name = Column(String)
     phone = Column(String)
     address = Column(String)
     total_amount = Column(Float)
-    status = Column(String, default="pending")
-    payment_phone = Column(String, nullable=True)
-    payment_reference = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    merchant_reference = Column(String(128), unique=True, index=True)
+    order_tracking_id = Column(String(256), unique=True, index=True, nullable=True)
+    status = Column(String(64), default="PENDING") 
+    paid_at = Column(DateTime, nullable=True)
 
-    items = relationship("OrderItem", back_populates="order")
+    items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
     def __str__(self):
         return f"Order {self.id}"
 
@@ -61,9 +59,10 @@ class OrderItem(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
     product_id = Column(Integer, ForeignKey("products.id"))
     size = Column(String)
+    variation = Column(String, nullable=True)
     quantity = Column(Integer)
     price = Column(Float)
-
+    
     order = relationship("Order", back_populates="items")
     product = relationship("Product", back_populates="order_items")
 

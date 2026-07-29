@@ -18,7 +18,7 @@ if raw_uri:
     else:
         SQLALCHEMY_DATABASE_URL = raw_uri
 else:
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./app.db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

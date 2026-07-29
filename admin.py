@@ -49,17 +49,20 @@ class OrderAdmin(ModelView, model=Order):
         Order.full_name,
         Order.phone,
         Order.address,
-        Order.total_amount
+        Order.total_amount,
     ]
-
+    
     column_details_list = [
         Order.id,
         Order.full_name,
         Order.phone,
         Order.address,
         Order.total_amount,
-        Order.items
+        Order.status,
+        Product.name,
+        Order.order_tracking_id
     ]
+    
 
 
 # -----------------------------
@@ -71,8 +74,10 @@ class OrderItemAdmin(ModelView, model=OrderItem):
         OrderItem.id,
         OrderItem.order_id,
         OrderItem.product_id,
+        Product.name,
         OrderItem.size,
-        OrderItem.quantity
+        OrderItem.quantity,
+        OrderItem.variation
     ]
 
 class UserAdmin(ModelView, model=User):

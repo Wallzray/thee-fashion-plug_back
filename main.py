@@ -85,7 +85,7 @@ origins = [
     "http://192.168.0.1:19006",   # alternate dev port
     "http://192.168.0.1:8081",
     "http://127.0.0.1:19006",
-    "http://127.0.0.1:8081", "*"
+    "http://127.0.0.1:8081"
 ]
 
 app.add_middleware(

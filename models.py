@@ -58,6 +58,7 @@ class OrderItem(Base):
     id = Column(Integer, primary_key=True)
     order_id = Column(Integer, ForeignKey("orders.id"))
     product_id = Column(Integer, ForeignKey("products.id"))
+    product_name = Column(String)
     size = Column(String)
     variation = Column(String, nullable=True)
     quantity = Column(Integer)

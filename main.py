@@ -411,7 +411,7 @@ async def checkout(
             "amount": float(new_order.total_amount),
             "currency": "UGX",
             "description": f"Thee Fashion Plug Order {new_order.id}",
-            "callback_url": "http://localhost:8000/pesapal/callback",
+            "callback_url": "https://thee-fashion-plug-back.onrender.com/pesapal/callback",
             "redirect_mode": "",
             "notification_id": IPN_ID, 
             "billing_address": {
@@ -622,7 +622,7 @@ async def pesapal_callback(request: Request, db: Session = Depends(get_db)):
 
 # --- UI HELPER: RENDERS CLEAN RESPONSIVE HTML PAGE ---
 def render_status_page(is_success: bool, title: str, message: str, reference: str) -> str:
-   frontend_redirect_url = f"http://localhost:8081/checkout-status?ref={reference}&status={'success' if is_success else 'failed'}"
+   frontend_redirect_url = f"https://thee-fashion-plug-front.vercel.app/checkout-status?ref={reference}&status={'success' if is_success else 'failed'}"
    return f"""
     <!DOCTYPE html>
     <html>

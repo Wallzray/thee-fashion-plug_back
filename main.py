@@ -426,9 +426,9 @@ async def checkout(
         # 6. Handshake with PesaPal
         async with httpx.AsyncClient(timeout=30) as client:
             resp = await client.post(
-                f"{PESAPAL_BASE}/Transactions/SubmitOrderRequest",
+                f"{PESAPAL_BASE}/api/Transactions/SubmitOrderRequest",
                 json=pesapal_payload,
-                headers={"Authorization": f"Bearer {token}"}
+                headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json","Accept": "application/json"}
             )
             resp.raise_for_status()
             pesapal_data = resp.json()

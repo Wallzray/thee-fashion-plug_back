@@ -430,8 +430,13 @@ async def checkout(
                 json=pesapal_payload,
                 headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json","Accept": "application/json"}
             )
-            resp.raise_for_status()
+            if resp.status_code != 200:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Pesapal Error ({resp.status_code}): {resp.text}"
+                )
             pesapal_data = resp.json()
+
 
         # 7. Update order with tracking information
         order_tracking_id = pesapal_data.get("orderTrackingId") or pesapal_data.get("order_tracking_id")
@@ -456,7 +461,8 @@ async def checkout(
         db.rollback()
         logger.error(f"Checkout failed: {e}")
         raise HTTPException(status_code=500, detail=f"Checkout failed: {str(e)}")
-    
+
+   
 @app.get("/orders")
 def get_orders(db: Session = Depends(get_db), current_admin: User = Depends(require_admin)):
     orders = db.query(Order).all()
@@ -534,7 +540,7 @@ async def notify_order_whatsapp(order_id: int, db: Session = Depends(get_db)):
  
 
 async def request_pesapal_token():
-    url = f"{PESAPAL_BASE}/Auth/RequestToken"
+    url = f"{PESAPAL_BASE}/api/Auth/RequestToken"
     async with httpx.AsyncClient(timeout=20) as client:
         resp = await client.post(url, json={
             "consumer_key": PESAPAL_CONSUMER_KEY,
@@ -658,8 +664,9 @@ async def pesapal_ipn(request: Request, background_tasks: BackgroundTasks):
 async def process_ipn_update(payload: dict):
     order_id = payload.get("OrderTrackingId")
     merchant_ref = payload.get("OrderMerchantReference")
-    
-    status_data = await check_live_payment_status(order_id)
+
+    token = await request_pesapal_token()
+    status_data = await check_live_payment_status(order_id, token)
     new_status = status_data.get("payment_status_description")
     
     print(f"IPN processed for {merchant_ref}: New status is {new_status}")

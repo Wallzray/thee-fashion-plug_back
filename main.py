@@ -100,7 +100,7 @@ app.include_router(router)
 
 PESAPAL_CONSUMER_KEY = os.getenv("PESAPAL_CONSUMER_KEY")
 PESAPAL_CONSUMER_SECRET = os.getenv("PESAPAL_CONSUMER_SECRET")
-PESAPAL_BASE = os.getenv("PESAPAL_BASE", "https://pay.pesapal.com/v3/api")
+PESAPAL_BASE = os.getenv("PESAPAL_BASE", "https://pay.pesapal.com/v3")
 CALLBACK_URL = os.getenv("CALLBACK_URL")
 IPN_ID = os.getenv("IPN_ID")
 
@@ -551,7 +551,7 @@ async def request_pesapal_token():
 async def check_live_payment_status(order_tracking_id: str, token: str) -> dict:
     """Queries PesaPal for the absolute, definitive status of a specific transaction."""
     # Note: Correct path structure for status checks includes /api/
-    url = f"{PESAPAL_BASE}/Transactions/GetTransactionStatus?orderTrackingId={order_tracking_id}"
+    url = f"{PESAPAL_BASE}/api/Transactions/GetTransactionStatus?orderTrackingId={order_tracking_id}"
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/json",
